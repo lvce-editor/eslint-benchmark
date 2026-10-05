@@ -28,9 +28,9 @@ jobs:
       - run: npm run type-check
       - run: npm test
   benchmark:
-    name: benchmark (ubuntu-26.04)
+    name: benchmark (ubuntu-24.04)
     needs: test
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
