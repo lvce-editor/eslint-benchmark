@@ -24,8 +24,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - name: Set Playwright browser path
-        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/ms-playwright" >> "$GITHUB_ENV"
       - run: npm ci
       - run: npm run type-check
       - run: npm test
@@ -40,6 +38,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Set Playwright browser path
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/ms-playwright" >> "$GITHUB_ENV"
       - run: npm ci
       - run: npx playwright install-deps chromium
       - name: Install Playwright headless shell
@@ -52,7 +52,7 @@ jobs:
             install_pid=$!
             while kill -0 "$install_pid" 2>/dev/null; do
               echo "Playwright install process snapshot:"
-              ps -eo pid,ppid,pgid,stat,etime,wchan:32,cmd --forest | grep -E 'npx playwright|playwright|node|unzip' || true
+              ps -eo pid,ppid,pgid,stat,etime,wchan:32,cmd --forest | grep -E "npx playwright|playwright|node|unzip" || true
               find /tmp -maxdepth 2 -path "/tmp/playwright-download-*/*" -type f -printf "%s bytes %p\\n" 2>/dev/null || true
               find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 4 -type f -printf "%s bytes %p\\n" 2>/dev/null | head -n 20 || true
               du -sh "$PLAYWRIGHT_BROWSERS_PATH" 2>/dev/null || true
