@@ -8,7 +8,7 @@ On Linux with Node 26, npm, and Chromium dependencies:
 
 ```sh
 npm ci
-npx playwright install chromium
+npx playwright install --only-shell chromium
 npm run setup
 ITERATIONS=5 npm run benchmark
 npm run report
