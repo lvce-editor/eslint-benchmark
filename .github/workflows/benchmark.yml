@@ -40,7 +40,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install-deps chromium
-      - run: npx playwright install --only-shell chromium
+      - name: Install Playwright headless shell
+        env:
+          DEBUG: pw:install
+        run: |
+          df -hT /tmp "$RUNNER_TEMP"
+          timeout --signal=TERM --kill-after=10s 5m bash -c '
+            npx playwright install --only-shell chromium &
+            install_pid=$!
+            while kill -0 "$install_pid" 2>/dev/null; do
+              echo "Playwright install process snapshot:"
+              ps -o pid,ppid,stat,etime,wchan:32,cmd --forest -g "$(ps -o pgid= -p "$install_pid" | tr -d " ")"
+              find /tmp -maxdepth 2 -path "/tmp/playwright-download-*/*" -type f -printf "%s bytes %p\\n" 2>/dev/null || true
+              sleep 30
+            done
+            wait "$install_pid"
+          '
       - run: npm run setup
       - run: ITERATIONS=3 npm run benchmark
       - run: npm run report
