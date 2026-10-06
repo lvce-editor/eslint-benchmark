@@ -23,4 +23,6 @@ Cold timing starts before a fresh server and browser launch and ends when the fi
 
 Separate launches capture cold and warm Chromium CPU profiles using the V8 CPU profiler trace category at 1 kHz. The harness verifies that the cold profile contains sampled stacks from `eslintEvaluationWorkerMain.js` and the warm cache-hit profile contains samples from `eslintMain.js`, where diagnostic results are restored. Profile runs do not contribute to readiness statistics. Raw traces are retained for download and opened with self-hosted Speedscope `1.25.0`, so the viewer reads the same-origin profile files. The report shows exact version metadata, individual trial outcomes, summaries, and profile links.
 
-The workflow requires all four test matrix jobs and the Ubuntu benchmark before merge. A successful main deployment publishes the report and its raw profile artifacts.
+The report charts cold and warm medians from successful unprofiled trials and shows every individual trial outcome. It also charts each separate CPU profile by sampled self-frame counts from the ESLint worker script. Those counts are sampling points, not milliseconds, wall time, or a complete process CPU breakdown; profile runs do not contribute to readiness medians. The raw JSON results and cold/warm profiles remain downloadable, and both profiles open in the self-hosted Speedscope viewer.
+
+The workflow requires all four test matrix jobs and the Ubuntu benchmark/report checks before merge. A successful main deployment publishes the report and its raw profile artifacts.
