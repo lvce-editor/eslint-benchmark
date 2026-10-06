@@ -1,0 +1,8 @@
+{
+  "name": "eslint-benchmark-fixture",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "eslint": "10.12.0"
+  }
+}

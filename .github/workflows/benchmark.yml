@@ -1,0 +1,76 @@
+name: ESLint diagnostic benchmark
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: eslint-benchmark-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  test:
+    name: test (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-26.04, windows-2025, macos-15, ubuntu-26.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run type-check
+      - run: npm test
+  benchmark:
+    name: benchmark (ubuntu-24.04)
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install-deps chromium
+      - run: npx playwright install --only-shell chromium
+      - run: npm run setup
+      - run: ITERATIONS=3 npm run benchmark
+      - run: npm run report
+      - run: npm run test:report
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: eslint-benchmark-${{ github.run_id }}
+          path: |
+            results/
+            .tmp/cache/setup.json
+            .tmp/pages/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 90
+      - uses: actions/upload-pages-artifact@v4
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: .tmp/pages
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: benchmark
+    runs-on: ubuntu-26.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

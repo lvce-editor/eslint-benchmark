@@ -1,0 +1,21 @@
+{
+  "name": "eslint-benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node src/setup.ts",
+    "benchmark": "node src/benchmark.ts",
+    "report": "node src/report.ts",
+    "test": "node --test test/*.test.ts",
+    "type-check": "tsc --noEmit",
+    "test:report": "node src/test-report.ts"
+  },
+  "devDependencies": {
+    "@lvce-editor/server": "0.115.5",
+    "@types/node": "^25.0.1",
+    "playwright": "1.60.0",
+    "speedscope": "1.25.0",
+    "typescript": "6.0.3"
+  }
+}
