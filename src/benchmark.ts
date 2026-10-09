@@ -122,7 +122,7 @@ const runTrial = async (mode: 'cold' | 'warm', iteration: number, profile = fals
     }
     const durationMs = mode === 'cold' ? coldElapsedMs : warmElapsedMs
     const trial = { mode, iteration, durationMs, success: true } as const
-    await writeFile(join(trialDirectory, 'trial.json'), `${JSON.stringify({ ...trial, profile: profile ? 'cpu-profile.json' : null, server: '@lvce-editor/server@0.115.5', extension: 'eslint@1.24.1', node: process.version, cache: mode === 'cold' ? 'new server and extension worker' : 'identical second request; extension result cache hit' }, null, 2)}\n`)
+    await writeFile(join(trialDirectory, 'trial.json'), `${JSON.stringify({ ...trial, profile: profile ? 'cpu-profile.json' : null, server: '@lvce-editor/server@0.121.4', extension: 'eslint@1.24.1', node: process.version, cache: mode === 'cold' ? 'new server and extension worker' : 'identical second request; extension result cache hit' }, null, 2)}\n`)
     return trial
   } catch (error) {
     const failure = { mode, iteration, durationMs: null, success: false, error: error instanceof Error ? error.stack || error.message : String(error) }

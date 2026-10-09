@@ -33,6 +33,6 @@ const manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as { id?: stri
 if (manifest.id !== 'builtin.eslint' || manifest.version !== version.slice(1)) {
   throw new Error(`Unexpected extension in pinned release: ${manifest.id}@${manifest.version}`)
 }
-await writeFile(join(cache, 'setup.json'), `${JSON.stringify({ extension: { repository: 'https://github.com/lvce-editor/eslint', version, archive: archiveName, sha256, id: manifest.id }, server: '@lvce-editor/server@0.115.5', fixture: 'fixture/src/benchmark.js', node: process.version }, null, 2)}\n`)
+await writeFile(join(cache, 'setup.json'), `${JSON.stringify({ extension: { repository: 'https://github.com/lvce-editor/eslint', version, archive: archiveName, sha256, id: manifest.id }, server: '@lvce-editor/server@0.121.4', fixture: 'fixture/src/benchmark.js', node: process.version }, null, 2)}\n`)
 run('npm', ['ci', '--prefix', join(root, 'fixture'), '--ignore-scripts'])
 console.log(`Prepared ESLint ${version} (${sha256})`)
