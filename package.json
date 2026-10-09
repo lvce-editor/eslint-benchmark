@@ -12,7 +12,7 @@
     "test:report": "node src/test-report.ts"
   },
   "devDependencies": {
-    "@lvce-editor/server": "0.115.5",
+    "@lvce-editor/server": "0.121.4",
     "@types/node": "^25.0.1",
     "playwright": "1.60.0",
     "speedscope": "1.25.0",
