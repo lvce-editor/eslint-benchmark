@@ -24,7 +24,7 @@ const createTest = async (): Promise<void> => {
   const fileUri = fixtureUri
   const code = `export const name = 'eslint.benchmark'
 export const test = async ({ Command, FileSystem, Main }) => {
-  const workspace = ${JSON.stringify(fixture)}
+  const workspace = ${JSON.stringify(pathToFileURL(fixture).href)}
   const uri = ${JSON.stringify(fileUri)}
   await Command.execute('Workspace.setUri', workspace)
   await Main.openUri(uri)
